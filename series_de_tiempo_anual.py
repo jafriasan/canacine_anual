@@ -72,7 +72,7 @@ def dashboard_series_tiempo():
     f_idioma = create_filter("ideomas", "Idioma")
     
     mapa_semanas = {
-        "S00": "Preestrenos",
+        #"S00": "Preestrenos",
         "S01": "1 Semana",
         "S02": "2 Semanas",
         "S03": "3 Semanas",
