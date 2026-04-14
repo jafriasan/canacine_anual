@@ -13,16 +13,16 @@ def dashboard_series_tiempo():
     # -----------------------------
     # CARGA DE DATOS
     # -----------------------------
-    archivo = "cubo_resumen_2000_2025.xlsx"
+    archivo = "/Users/judith_frias/Comscore_data/Daily_report_comscore/Proyecto_Comscore/cubo_resumen_2000_2025.xlsx"
 
     @st.cache_data
     def load_data():
-        return pd.read_excel(archivo)
+        return pd.read_excel(archivo, keep_default_na=False)
 
     df = load_data()
 
     # -----------------------------
-    # MÉTRICAS
+    # MÉTRICA
     # -----------------------------
     metrica = st.sidebar.selectbox(
         "Métricas",
@@ -62,6 +62,7 @@ def dashboard_series_tiempo():
         default=[]
     )
 
+
     # Otros filtros
     f_pais = create_filter("pais_primario", "País primario")
     f_pais_no_primario = create_filter("pais_no_primario", "País no primario")
@@ -70,10 +71,87 @@ def dashboard_series_tiempo():
     f_dist = create_filter("dist_1", "Distribuidor")
     f_idioma = create_filter("ideomas", "Idioma")
     
-    # NOTA AGREGADA 
+    mapa_semanas = {
+        "S00": "Preestrenos",
+        "S01": "1 Semana",
+        "S02": "2 Semanas",
+        "S03": "3 Semanas",
+        "S04": "4 Semanas",
+        "S05": "5 Semanas",
+        "S06": "6 Semanas",
+        "S07": "7 Semanas",
+        "S08": "8 Semanas",
+        "S09": "9 Semanas",
+        "S10": "10 Semanas",
+        "S11": "11 Semanas",
+        "S12": "12 Semanas",
+        "S13": "13 Semanas",
+        "S14": "14 Semanas",
+        "S15": "15 Semanas",
+        "S16": "16 Semanas",
+        "S17": "Más de 16 semanas"
+    }
+    
+    
+    orden_semanas = [f"S{str(i).zfill(2)}" for i in range(18)]
+    
+    f_rango_sem = create_filter(
+        "rango_semanas",
+        "Rango de semanas en cine",
+        options=orden_semanas,
+        format_func=lambda x: mapa_semanas.get(x, x)
+    )
+    
+    mapa_cines = {
+        "NA": "No aplica",
+        "C01": "1 Cine",
+        "C02": "2 Cines",
+        "C03": "3 Cines",
+        "C04": "4 Cines",
+        "C05": "5 Cines",
+        "C06": "6-10 Cines",
+        "C07": "11-15 Cines",
+        "C08": "16-20 Cines",
+        "C09": "21-30 Cines",
+        "C10": "31-40 Cines",
+        "C11": "41-50 Cines",
+        "C12": "51-100 Cines",
+        "C13": "101-200 Cines",
+        "C14": "201-300 Cines",
+        "C15": "301-400 Cines",
+        "C16": "401-500 Cines",
+        "C17": "501-700 Cines",
+        "C18": "701-900 Cines",
+        "C19": "> 900 Cines"
+    }   
+    
+    orden_cines = ["NA"] + [f"C{str(i).zfill(2)}" for i in range(1, 20)]
+    
+    f_rango_cines = create_filter(
+        "rango_cines",
+        "Rango de cines",
+        options=orden_cines,
+        format_func=lambda x: mapa_cines.get(x, x)
+    )
+    
+    # NOTAS DEBAJO DEL FILTRO
     st.sidebar.markdown(
     "<p style='font-size:11px; color:gray;'>"
     "En País de origen, México Refiere a casos con participación de México como país de origen (primario o no primario)."
+    "</p>",
+    unsafe_allow_html=True
+    )
+    
+    st.sidebar.markdown(
+    "<p style='font-size:11px; color:gray;'>"
+    "Rango de cines, refiere al número de cines en los que se exhibió la película en su primer fin de semana)."
+    "</p>",
+    unsafe_allow_html=True
+    )
+    
+    st.sidebar.markdown(
+    "<p style='font-size:11px; color:gray;'>"
+    "Fuente: Comscore."
     "</p>",
     unsafe_allow_html=True
     )
@@ -103,6 +181,12 @@ def dashboard_series_tiempo():
 
     if f_idioma:
         df_filtered = df_filtered[df_filtered["ideomas"].isin(f_idioma)]
+        
+    if f_rango_sem:
+        df_filtered = df_filtered[df_filtered["rango_semanas"].isin(f_rango_sem)]
+        
+    if f_rango_cines:
+        df_filtered = df_filtered[df_filtered["rango_cines"].isin(f_rango_cines)]
 
     # =====================================================
     # 📊 DASHBOARD INGRESOS
