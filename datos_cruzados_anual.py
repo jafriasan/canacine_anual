@@ -12,11 +12,11 @@ def dashboard_datos_cruzados():
     # -----------------------------
     # CARGA DE DATOS
     # -----------------------------
-    archivo = "cubo_resumen_2000_2025.xlsx"
+    archivo = "/Users/judith_frias/Comscore_data/Daily_report_comscore/Proyecto_Comscore/cubo_resumen_2000_2025.xlsx"
 
     @st.cache_data
     def load_data():
-        return pd.read_excel(archivo)
+        return pd.read_excel(archivo, keep_default_na=False)
 
     df_base = load_data()
 
@@ -51,10 +51,24 @@ def dashboard_datos_cruzados():
         format_func=lambda x: "México" if x == 1 else "Resto"
     )
 
-    # NOTA AGREGADA
+    # NOTA AGREGADA JUSTO DEBAJO DEL FILTRO
     st.sidebar.markdown(
     "<p style='font-size:11px; color:gray;'>"
     "En País de origen, México Refiere a casos con participación de México como país de origen (primario o no primario)."
+    "</p>",
+    unsafe_allow_html=True
+    )
+    
+    st.sidebar.markdown(
+    "<p style='font-size:11px; color:gray;'>"
+    "Rango de cines, refiere al número de cines en los que se exhibió la película en su primer fin de semana)."
+    "</p>",
+    unsafe_allow_html=True
+    )
+    
+    st.sidebar.markdown(
+    "<p style='font-size:11px; color:gray;'>"
+    "Fuente: Comscore."
     "</p>",
     unsafe_allow_html=True
     )
@@ -235,6 +249,7 @@ def dashboard_datos_cruzados():
         )
 
         fig4.update_layout(
+            showlegend=False,
             yaxis=dict(range=[0, pais_sec["Porcentaje (%)"].max() * 1.25]),
             xaxis_title=""
         )
@@ -265,6 +280,127 @@ def dashboard_datos_cruzados():
         fig5.update_layout(height=700)
 
         st.plotly_chart(fig5, use_container_width=True)
+        
+       # -------------------------
+       # RANGO DE SEMANAS EN CINES
+       # -------------------------
+
+        # Agrupar
+        sem = df_filtrado.groupby("rango_semanas", as_index=False)[variable].sum()
+
+        # Mapeo de etiquetas
+        mapa_semanas = {
+            "S00": "Preestrenos",
+            "S01": "1 Semana",
+            "S02": "2 Semanas",
+            "S03": "3 Semanas",
+            "S04": "4 Semanas",
+            "S05": "5 Semanas",
+            "S06": "6 Semanas",
+            "S07": "7 Semanas",
+            "S08": "8 Semanas",
+            "S09": "9 Semanas",
+            "S10": "10 Semanas",
+            "S11": "11 Semanas",
+            "S12": "12 Semanas",
+            "S13": "13 Semanas",
+            "S14": "14 Semanas",
+            "S15": "15 Semanas",
+            "S16": "16 Semanas",
+            "S17": "Más de 16 semanas"
+        }
+
+        # Aplicar etiquetas
+        sem["rango_semanas_label"] = sem["rango_semanas"].map(mapa_semanas)
+
+        # Ordenar correctamente (por código original, no por valor)
+        sem = sem.sort_values("rango_semanas")
+
+        # Gráfica completa (sin top ni otros)
+        fig6 = px.pie(
+        sem,
+            names="rango_semanas_label",
+            values=variable,
+            title=f"{titulo} por rango de semanas en cines"
+        )
+
+        fig6.update_layout(height=700)
+
+        st.plotly_chart(fig6, use_container_width=True)     
+        
+        # -----------------------------------------------
+        # RANGO DE CINES EL FIN DE SEMANA DE ESTRENO (%)
+        # -----------------------------------------------
+        
+        mapa_cines = {
+            "NA": "No aplica",
+            "C01": "1 Cine",
+            "C02": "2 Cines",
+            "C03": "3 Cines",
+            "C04": "4 Cines",
+            "C05": "5 Cines",
+            "C06": "6-10 Cines",
+            "C07": "11-15 Cines",
+            "C08": "16-20 Cines",
+            "C09": "21-30 Cines",
+            "C10": "31-40 Cines",
+            "C11": "41-50 Cines",
+            "C12": "51-100 Cines",
+            "C13": "101-200 Cines",
+            "C14": "201-300 Cines",
+            "C15": "301-400 Cines",
+            "C16": "401-500 Cines",
+            "C17": "501-700 Cines",
+            "C18": "701-900 Cines",
+            "C19": "> 900 Cines"
+        }    
+
+        cines = df_filtrado.groupby("rango_cines", as_index=False)[variable].sum()
+
+        total = cines[variable].sum()
+        cines["pct"] = (cines[variable] / total) * 100
+
+        # Crear columna con etiquetas
+        cines["rango_cines_label"] = cines["rango_cines"].map(mapa_cines)
+
+        # Orden correcto
+        orden_cines = ["NA"] + [f"C{str(i).zfill(2)}" for i in range(1, 20)]
+
+        cines["rango_cines"] = pd.Categorical(
+            cines["rango_cines"],
+            categories=orden_cines,
+            ordered=True
+        )
+
+        cines = cines.sort_values("rango_cines")
+
+        # Gráfica
+        fig7 = px.bar(
+            cines,
+            x="rango_cines_label",
+            y="pct",
+            title=f"{titulo} por rango de cines (%)",
+            hover_data={variable: ":,.0f", "pct": ":.1f"}
+        )
+
+        fig7.update_traces(
+            texttemplate="%{y:,.1f}%",
+            textposition="outside",
+            hovertemplate=(
+                "Rango de cines: %{x}<br>"
+                "Valor: %{customdata[0]:,.0f}<br>"
+                "Porcentaje: %{y:.1f}%<br>"
+                "<extra></extra>"
+                )
+        )
+
+        fig7.update_layout(
+            yaxis_title="Porcentaje (%)",
+            xaxis_title="",
+            yaxis=dict(range=[0, cines["pct"].max() * 1.2])
+        )
+
+        st.plotly_chart(fig7, use_container_width=True)
 
     # =====================================================
     # SELECCIÓN MÉTRICA
@@ -279,4 +415,5 @@ def dashboard_datos_cruzados():
         generar_dashboard("titulos", "Títulos", df)
 
     elif metrica == "Estrenos":
-        generar_dashboard("estreno", "Estrenos", df)  
+        generar_dashboard("estreno", "Estrenos", df)
+        
