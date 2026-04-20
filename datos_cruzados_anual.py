@@ -39,7 +39,7 @@ def dashboard_datos_cruzados():
     st.sidebar.header("Filtros")
 
     anios = st.sidebar.multiselect(
-        "Aaño(s)",
+        "Año(s)",
         sorted(df_base["year"].dropna().unique()),
         default=[ultimo_anio]
     )
