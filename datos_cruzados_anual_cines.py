@@ -13,7 +13,7 @@ def dashboard_datos_cruzados_cines():
     # -----------------------------
     # CARGA DE DATOS
     # -----------------------------
-    archivo = "cubo_resumen_2000_2025.xlsx"
+    archivo = "cubo_cines_2000_2025.xlsx"
 
     @st.cache_data
     def load_data():
