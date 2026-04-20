@@ -62,7 +62,7 @@ if st.session_state.page == "home":
 
     with col1:
         st.button(
-            "📈 Títulos: Series de tiempo",
+            "📈 TÍTULOS: SERIES DE TIEMPO",
             use_container_width=True,
             on_click=go_to,
             args=("series",)
@@ -72,15 +72,15 @@ if st.session_state.page == "home":
         st.markdown("""
                     <p style="font-size:14px; color:gray;">
                     Se presenta estadística anual del número de títulos exhibidos en México y la taquilla asociada, 
-                    tanto en ingresos como en boletos vendidos. Estos datos para las dimensiones (filtros) de país 
+                    tanto en ingresos como en el número de boletos vendidos (admisión). Estos datos para las dimensiones (filtros) de país 
                     de origen (México y el resto), país primario y no primario, género primario, clasificación, distribuidor, rango de semanas en cartelera,
-                    rango de cines, y también se distigue entre el total de títulos y los estrenos. La información se presenta
-                    en gráficas de series de tiempo, para el periodo del año 2000 a la fecha. 
+                    rango del número de cines en los que se exhibió la película, y también se distigue entre el total de títulos y los estrenos.
+                    La información se presenta en gráficas de series de tiempo, para el periodo del año 2000 a la fecha. 
                     </p>
                     """, unsafe_allow_html=True)
 
         st.button(
-            "🎬 Cines: Series de tiempo",
+            "🎬 CINES: SERIES DE TIEMPO",
             use_container_width=True,
             on_click=go_to,
             args=("cines_series",)
@@ -89,7 +89,7 @@ if st.session_state.page == "home":
         st.markdown("""
                     <p style="font-size:14px; color:gray;">
                     Se presenta estadística anual del número de cines/pantallas en México y la taquilla asociada, 
-                    tanto en ingresos como en boletos vendidos. Estos datos para las dimensiones (filtros) de circuito de exhibición,
+                    tanto en ingresos como en el número de boletos vendidos. Estos datos para las dimensiones (filtros) de circuito de exhibición,
                     región, entidad federativa, ciudad, rango de títulos exhibidos y rango de pantallas. La información se presentan
                     en gráficas de series de tiempo, para el periodo del año 2000 a la fecha. 
                     </p>
@@ -97,7 +97,7 @@ if st.session_state.page == "home":
 
     with col2:
         st.button(
-            "📊 Títulos: Datos cruzados",
+            "📊 TÍTULOS: DATOS CRUZADOS",
             use_container_width=True,
             on_click=go_to,
             args=("cruzados",)
@@ -106,15 +106,16 @@ if st.session_state.page == "home":
         st.markdown("""
                     <p style="font-size:14px; color:gray;">
                     Se presenta estadística anual del número de títulos exhibidos en México y la taquilla asociada, 
-                    tanto en ingresos como en boletos vendidos. Estos datos para los filtros de año(s), país 
+                    tanto en ingresos como en el número de boletos vendidos. Estos datos para los filtros de año(s), país 
                     de origen (México y el resto), y también se distigue entre el total de títulos y los estrenos. La información
                     se presenta en gráficas de datos cruzados para los filtros seleccionados y para las dimensiones de
-                    país primario y no primario, género primario, clasificación, distribuidora, rango de semanas en cartelera y rango de cines.  
+                    país primario y no primario, género primario, clasificación, distribuidor, rango de semanas en cartelera y
+                    rango del número de cines en los que se exhibió la película.  
                     </p>
                     """, unsafe_allow_html=True)
 
         st.button(
-            "🔗 Cines: Datos cruzados",
+            "🔗 CINES: DATOS CRUZADOS",
             use_container_width=True,
             on_click=go_to,
             args=("cines_cruzados",)
@@ -123,10 +124,10 @@ if st.session_state.page == "home":
         st.markdown("""
                     <p style="font-size:14px; color:gray;">
                     Se presenta estadística anual del número de cines/pantallas en México y la taquilla asociada, 
-                    tanto en ingresos como en boletos vendidos. Estos datos para los filtros de año(s), entidad(es) federativa(s) y ciudad(es).
-                    La información se presenta en gráficas de datos cruzados para los filtros seleccionados
-                    y las dimensiones de circuito de exhibición, rango de títulos exhibidos, rango de pantallas y región.
-                    Las dimensiones de entidad federativa y ciudad se presentan en formato de mapa.
+                    tanto en ingresos como en el número de boletos vendidos. Estos datos para los filtros de año(s),
+                    entidad(es) federativa(s) y ciudad(es). La información se presenta en gráficas de datos cruzados
+                    para los filtros seleccionados y las dimensiones de circuito de exhibición, rango de títulos exhibidos,
+                    rango de pantallas y región. Las dimensiones de entidad federativa y ciudad se presentan en formato de mapa.
                     </p>
                     """, unsafe_allow_html=True)
 
@@ -160,7 +161,7 @@ elif st.session_state.page == "cruzados":
 # =====================================================
 elif st.session_state.page == "cines_series":
 
-    st.markdown("<h1>🎬 Cines: Series de tiempo</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>🎬 Reporte de Taquilla en México</h1>", unsafe_allow_html=True)
 
     st.button("⬅ Volver", on_click=go_to, args=("home",))
     st.markdown("---")
@@ -172,7 +173,7 @@ elif st.session_state.page == "cines_series":
 # =====================================================
 elif st.session_state.page == "cines_cruzados":
 
-    st.markdown("<h1>🔗 Cines: Datos cruzados</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>🔗 Reporte de Taquilla en México</h1>", unsafe_allow_html=True)
 
     st.button("⬅ Volver", on_click=go_to, args=("home",))
     st.markdown("---")
