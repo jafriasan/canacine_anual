@@ -94,7 +94,7 @@ def dashboard_datos_cruzados_cines():
     }
         
         
-    orden_rango_tit = [f"S{str(i).zfill(2)}" for i in range(1,18)]    
+    #orden_rango_tit = [f"T{str(i).zfill(2)}" for i in range(1,18)]    
 
     mapa_rango_pan = {
             "P01": "1 Pantalla",
@@ -108,7 +108,7 @@ def dashboard_datos_cruzados_cines():
     }
         
         
-    orden_rango_pan = [f"S{str(i).zfill(2)}" for i in range(1,18)]  
+    #orden_rango_pan = [f"P{str(i).zfill(2)}" for i in range(1,18)]  
 
     # -----------------------------
     # APLICAR FILTROS
@@ -304,7 +304,7 @@ def dashboard_datos_cruzados_cines():
             df_map = (
                 df_filtrado
                 .dropna(subset=["lat", "lon", variable])
-                .groupby(["estado", "ciudad", "lat", "lon"], as_index=False)[variable]
+                .groupby(["estado_f", "ciudad_f", "lat", "lon"], as_index=False)[variable]
                 .sum()
                 )
 
@@ -317,8 +317,8 @@ def dashboard_datos_cruzados_cines():
                 lon="lon",
                 size=variable,
                 color=variable,
-                hover_name="ciudad",
-                hover_data=["estado", variable],
+                hover_name="ciudad_f",
+                hover_data=["estado_f", variable],
                 zoom=4,
                 mapbox_style="open-street-map"
                 )
