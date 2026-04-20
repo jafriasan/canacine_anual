@@ -13,7 +13,7 @@ def dashboard_series_tiempo_cines():
     # -----------------------------
     # CARGA DE DATOS
     # -----------------------------
-    archivo = "/Users/judith_frias/Comscore_data/Daily_report_comscore/Proyecto_Comscore/cubo_cines_2000_2025.xlsx"
+    archivo = "cubo_resumen_2000_2025.xlsx"
 
     @st.cache_data
 
